@@ -118,6 +118,10 @@ void            userinit(void);
 int             wait(void);
 void            wakeup(void*);
 void            yield(void);
+int             kern_mprotect(int, int);
+void            do_mprotect(int, int);
+int             kern_munprotect(int, int);
+void            do_munprotect(int, int);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

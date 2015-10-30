@@ -377,6 +377,29 @@ copyout(pde_t *pgdir, uint va, void *p, uint len)
   return 0;
 }
 
+void do_mprotect(int addr, int len) {
+  uint vpn = addr;
+  for (vpn = addr; vpn < addr + len*PGSIZE; vpn += PGSIZE) {
+    pte_t *pte;
+    pde_t *pde = proc->pgdir;
+    if ((pte = walkpgdir(pde, (void*)vpn, 0)) != 0) {
+      *pte = *pte & (~PTE_W);
+      }
+  }
+  lcr3(v2p(proc->pgdir));
+}
+
+void do_munprotect(int addr, int len) {
+  uint vpn = addr;
+  for (vpn = addr; vpn < addr + len*PGSIZE; vpn += PGSIZE) {
+    pte_t *pte;
+    pde_t *pde = proc->pgdir;
+    if ((pte = walkpgdir(pde, (void*)vpn, 0)) != 0) {
+      *pte = *pte | (~PTE_W);
+      }
+  }
+  lcr3(v2p(proc->pgdir));
+}
 //PAGEBREAK!
 // Blank page.
 //PAGEBREAK!

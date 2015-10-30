@@ -61,7 +61,7 @@ sys_sleep(void)
 {
   int n;
   uint ticks0;
-  
+
   if(argint(0, &n) < 0)
     return -1;
   acquire(&tickslock);
@@ -83,9 +83,35 @@ int
 sys_uptime(void)
 {
   uint xticks;
-  
+
   acquire(&tickslock);
   xticks = ticks;
   release(&tickslock);
   return xticks;
+}
+
+int
+sys_mprotect(void) {
+    int addr;
+    int len;
+    if (argint(0, &addr) < 0) {
+        return -1;
+    }
+    if (argint(1, &len) < 0) {
+        return -1;
+    }
+    return kern_mprotect(addr, len);
+}
+
+int
+sys_munprotect(void) {
+    int addr;
+    int len;
+    if (argint(0, &addr) < 0) {
+        return -1;
+    }
+    if (argint(1, &len) < 0) {
+        return -1;
+    }
+    return kern_munprotect(addr, len);
 }
